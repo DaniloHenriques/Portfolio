@@ -59,6 +59,8 @@ img { display: block; }
   position: fixed;
   inset: 0;
   background: var(--overlay);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s var(--ease);
@@ -109,7 +111,6 @@ img { display: block; }
   -webkit-backdrop-filter: blur(12px);
   transition: background 0.25s var(--ease);
 }
-.pill.is-open { background: var(--white); }
 
 .sentence {
   display: flex;
