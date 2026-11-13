@@ -1,10 +1,50 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Danilo Henriques — Portfólio</title>
-  <style>body{font-family:system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0}</style>
+  <title>Danilo Henriques — Product Designer</title>
+  <meta name="description" content="Portfolio of Danilo Henriques, Product Designer living in Santos.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Inter+Tight:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
-<body><p>Portfólio em construção.</p></body>
+<body data-page="home">
+  <header class="topbar">
+    <div class="mode-toggle" role="group" aria-label="Mode">
+      <button type="button" data-mode="design" aria-pressed="true" title="Design">
+        <img src="assets/img/icon-design.svg" width="20" height="20" alt="Design">
+      </button>
+      <button type="button" data-mode="develop" aria-pressed="false" title="Develop">
+        <img src="assets/img/icon-code.svg" width="20" height="20" alt="Develop">
+      </button>
+    </div>
+
+    <div class="pill">
+      <div class="sentence">
+        <span id="verb">I design</span>
+        <button type="button" class="sentence-trigger" id="category-trigger" aria-haspopup="listbox" aria-expanded="false">
+          <span class="label">Products</span>
+          <img class="chevron" src="assets/img/icon-chevron.svg" width="16" height="16" alt="">
+        </button>
+        <span>for</span>
+        <button type="button" class="sentence-trigger" id="audience-trigger" aria-haspopup="listbox" aria-expanded="false">
+          <span class="label">You</span>
+          <img class="chevron" src="assets/img/icon-chevron.svg" width="16" height="16" alt="">
+        </button>
+      </div>
+      <div class="pill-menu"><div><ul role="listbox"></ul></div></div>
+    </div>
+  </header>
+
+  <main class="home" data-mode="design">
+    <div class="grid" aria-live="polite"></div>
+  </main>
+
+  <footer class="footer"></footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
 </html>
