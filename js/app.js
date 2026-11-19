@@ -84,11 +84,38 @@
     photo.onload = () => $(".talk-photo").appendChild(photo);
     photo.src = IMG + CONTACT.photo;
 
-    // O botão de voltar ao topo desce quando a seção final chega na tela
+    // O botão de voltar ao topo desce do alto da tela só quando a página chega no fim.
+    // Ele só "rearma" quando o lugar dele já saiu da tela, sem animação, para ninguém ver.
     const talk = $(".talk");
-    new IntersectionObserver(([entry]) => talk.classList.toggle("is-in", entry.isIntersecting), {
-      threshold: 0.6,
-    }).observe(talk);
+    const btnTop = $(".btn-top");
+    let ticking = false;
+    function updateBtnTop() {
+      ticking = false;
+      const r = talk.getBoundingClientRect();
+      const vh = window.innerHeight;
+      if (!talk.classList.contains("is-in")) {
+        const atBottom = window.scrollY + vh >= document.documentElement.scrollHeight - 2;
+        if (atBottom) talk.classList.add("is-in");
+        return;
+      }
+      // posição natural do botão (topo da seção + padding), ignorando a animação
+      const top = r.top + parseFloat(getComputedStyle(talk).paddingTop);
+      if (top > vh || top + btnTop.offsetHeight < 0) {
+        btnTop.style.transition = "none";
+        talk.classList.remove("is-in");
+        void btnTop.offsetHeight; // aplica o reset antes de devolver a transição
+        btnTop.style.transition = "";
+      }
+    }
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateBtnTop);
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    updateBtnTop();
 
     // Rolagem suave para os links internos (#contact, #top)
     document.querySelectorAll('a[href^="#"]').forEach((a) =>
