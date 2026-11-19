@@ -232,8 +232,13 @@ img { display: block; }
   border: 1px solid var(--line);
   border-radius: 50%;
   background: var(--soft);
-  transition: background 0.2s;
+  /* Escondido acima até a seção final entrar na tela; depois desce no lugar */
+  opacity: 0;
+  transform: translateY(-48px);
+  pointer-events: none;
+  transition: background 0.2s, opacity 0.4s var(--ease), transform 0.5s var(--ease);
 }
+.talk.is-in .btn-top { opacity: 1; transform: none; pointer-events: auto; }
 .btn-top:hover { background: var(--soft-bg); }
 
 .talk-body {

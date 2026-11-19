@@ -84,6 +84,12 @@
     photo.onload = () => $(".talk-photo").appendChild(photo);
     photo.src = IMG + CONTACT.photo;
 
+    // O botão de voltar ao topo desce quando a seção final chega na tela
+    const talk = $(".talk");
+    new IntersectionObserver(([entry]) => talk.classList.toggle("is-in", entry.isIntersecting), {
+      threshold: 0.6,
+    }).observe(talk);
+
     // Rolagem suave para os links internos (#contact, #top)
     document.querySelectorAll('a[href^="#"]').forEach((a) =>
       a.addEventListener("click", (e) => {
