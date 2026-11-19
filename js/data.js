@@ -7,6 +7,8 @@
 //             { image }           -> imagem ocupando o card inteiro
 // texts:      as três colunas de texto da página do projeto
 // gallery:    imagens da página do projeto (deixe [] para mostrar os blocos cinza)
+// year:       ano em que o projeto aparece na home (sem year, o projeto não aparece na home)
+// type:       texto embaixo do nome no card da home
 
 const LOREM =
   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966";
@@ -47,6 +49,8 @@ window.PORTFOLIO = {
   PROJECTS: [
     {
       id: "caju",
+      year: 2026,
+      type: "Design System",
       name: "Caju",
       mode: "design",
       categories: ["design-system"],
@@ -57,7 +61,9 @@ window.PORTFOLIO = {
     },
     {
       id: "gol-smiles",
-      name: "GOL/Smiles",
+      year: 2026,
+      type: "Design System",
+      name: "GOL & Smiles",
       mode: "design",
       categories: ["design-system"],
       tags: ["Design System"],
@@ -67,6 +73,8 @@ window.PORTFOLIO = {
     },
     {
       id: "alelo",
+      year: 2026,
+      type: "Design System",
       name: "Alelo",
       mode: "design",
       categories: ["design-system"],
@@ -76,17 +84,9 @@ window.PORTFOLIO = {
       gallery: [],
     },
     {
-      id: "estapar",
-      name: "Estapar",
-      mode: "design",
-      categories: ["design-system", "website"],
-      tags: ["Design System Web", "Website"],
-      cover: { bg: "#000000", logo: "logo-estapar.svg", w: 147, h: 40 },
-      texts: [LOREM, LOREM, LOREM],
-      gallery: [],
-    },
-    {
       id: "ruler-ax",
+      year: 2025,
+      type: "Agent Experience",
       name: "Ruler",
       mode: "design",
       categories: ["ai"],
@@ -97,11 +97,25 @@ window.PORTFOLIO = {
     },
     {
       id: "youse",
+      year: 2025,
+      type: "Design System",
       name: "Youse",
       mode: "design",
       categories: ["design-system", "app"],
       tags: ["Design System Web/App", "App"],
       cover: { bg: "#ffce56", logo: "logo-youse.svg", w: 117, h: 24 },
+      texts: [LOREM, LOREM, LOREM],
+      gallery: [],
+    },
+    {
+      id: "estapar",
+      year: 2025,
+      type: "Design System",
+      name: "Estapar",
+      mode: "design",
+      categories: ["design-system", "website"],
+      tags: ["Design System Web", "Website"],
+      cover: { bg: "#000000", logo: "logo-estapar.svg", w: 147, h: 40 },
       texts: [LOREM, LOREM, LOREM],
       gallery: [],
     },
@@ -137,9 +151,18 @@ window.PORTFOLIO = {
     },
   ],
 
-  // Links da barra de baixo e do botão "Contact now".
+  // Links dos botões "About" e "Contact now".
   LINKS: {
+    about: "#",
     contact: "#",
     profile: "#",
+  },
+
+  // Seção final da home ("Let's talk."), que ocupa a tela inteira depois dos cards.
+  CONTACT: {
+    title: "Let's talk.",
+    text: LOREM + ",",
+    photo: "danilo.jpg", // exporte a foto do Figma para assets/img/danilo.jpg
+    chips: ["Open to freelancer only", "Product Design", "🇧🇷  Brazil"],
   },
 };

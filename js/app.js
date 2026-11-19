@@ -1,5 +1,5 @@
 (function () {
-  const { CATEGORIES, AUDIENCES, CATEGORY_LABELS, PROJECTS, LINKS } = window.PORTFOLIO;
+  const { CATEGORY_LABELS, PROJECTS, LINKS } = window.PORTFOLIO;
   const IMG = "assets/img/";
   const $ = (sel, root = document) => root.querySelector(sel);
 
@@ -16,17 +16,6 @@
   }
 
   const metaMarkup = (items) => `<div class="meta">${items.map((t) => `<span>${esc(t)}</span>`).join("")}</div>`;
-
-  function footerMarkup() {
-    return `
-      <div class="meta">
-        <span>Hi, I'm <a class="name" href="${LINKS.profile}">Danilo Henriques</a></span>
-        <span>Product Designer</span>
-        <span>Open to freelancers only</span>
-        <span>Living in Santos</span>
-      </div>
-      <a class="btn-contact" href="${LINKS.contact}">Contact now</a>`;
-  }
 
   // ---------- Menus que expandem a pílula ----------
   // Um menu aberto por vez; clicar fora, no overlay ou apertar Esc fecha.
@@ -55,128 +44,57 @@
 
   // ---------- HOME ----------
   function initHome() {
-    const state = {
-      mode: location.hash === "#develop" ? "develop" : "design",
-      category: "all",
-      audience: AUDIENCES[0].id,
-    };
+    const { CONTACT } = window.PORTFOLIO;
+    const chip = (t) => `<span class="chip">${esc(t)}</span>`;
 
-    const home = $(".home");
-    const grid = $(".grid");
-    const pill = $(".pill");
-    const menuList = $(".pill-menu ul");
-    const verb = $("#verb");
-    const catTrigger = $("#category-trigger");
-    const audTrigger = $("#audience-trigger");
-    let openKind = null; // "category" | "audience"
+    $("#about-link").href = LINKS.about;
 
-    $(".footer").innerHTML = footerMarkup();
-
-    function renderSentence() {
-      verb.textContent = state.mode === "design" ? "I design" : "I develop";
-      const cat = CATEGORIES[state.mode].find((c) => c.id === state.category);
-      const aud = AUDIENCES.find((a) => a.id === state.audience);
-      $(".label", catTrigger).textContent = cat.label;
-      $(".label", audTrigger).textContent = aud.label;
-      document.querySelectorAll(".mode-toggle button").forEach((b) => {
-        b.setAttribute("aria-pressed", String(b.dataset.mode === state.mode));
-      });
-    }
-
-    function renderGrid(animate) {
-      const list = PROJECTS.filter(
-        (p) => p.mode === state.mode && (state.category === "all" || p.categories.includes(state.category))
-      );
-      const html = list.length
-        ? list
+    // Projetos agrupados por ano, do mais recente para o mais antigo
+    const years = [...new Set(PROJECTS.filter((p) => p.year).map((p) => p.year))].sort((a, b) => b - a);
+    $(".timeline").innerHTML = years
+      .map(
+        (y) => `
+      <section class="year" aria-label="${y}">
+        ${chip(y)}
+        <div class="grid">
+          ${PROJECTS.filter((p) => p.year === y)
             .map(
               (p) => `
-          <a class="card" href="project.html?p=${encodeURIComponent(p.id)}">
-            ${coverMarkup(p, "card-cover")}
-            <div class="card-info">
-              <span class="card-title">${esc(p.name)}</span>
-              ${metaMarkup(p.tags)}
-            </div>
-          </a>`
+            <a class="card" href="project.html?p=${encodeURIComponent(p.id)}">
+              ${coverMarkup(p, "card-cover")}
+              <span class="card-info">
+                <span class="card-title">${esc(p.name)}</span>
+                <span class="card-type">${esc(p.type || p.tags[0] || "")}</span>
+              </span>
+            </a>`
             )
-            .join("")
-        : `<p class="empty">Nenhum projeto nesta categoria ainda.</p>`;
+            .join("")}
+        </div>
+      </section>`
+      )
+      .join("");
 
-      home.dataset.mode = state.mode;
-      if (!animate) {
-        grid.innerHTML = html;
-        return;
-      }
-      grid.classList.add("is-leaving");
-      setTimeout(() => {
-        grid.innerHTML = html;
-        grid.querySelectorAll(".card").forEach((c) => {
-          c.style.opacity = "0";
-          c.style.transform = "translateY(8px)";
-        });
-        grid.classList.remove("is-leaving");
-        requestAnimationFrame(() =>
-          grid.querySelectorAll(".card").forEach((c, i) => {
-            c.style.transitionDelay = `${i * 40}ms`;
-            c.style.opacity = "";
-            c.style.transform = "";
-          })
-        );
-      }, 200);
-    }
+    // Seção final "Let's talk."
+    $("#talk-title").textContent = CONTACT.title;
+    $(".talk-text").textContent = CONTACT.text;
+    $("#talk-contact").href = LINKS.contact;
+    $(".talk-chips").innerHTML = CONTACT.chips.map(chip).join("");
+    const photo = new Image();
+    photo.alt = "Danilo Henriques";
+    photo.onload = () => $(".talk-photo").appendChild(photo);
+    photo.src = IMG + CONTACT.photo;
 
-    function fillMenu(kind) {
-      const options = kind === "category" ? CATEGORIES[state.mode] : AUDIENCES;
-      const current = kind === "category" ? state.category : state.audience;
-      menuList.setAttribute("aria-labelledby", kind === "category" ? "category-trigger" : "audience-trigger");
-      menuList.innerHTML = options
-        .map(
-          (o) =>
-            `<li><button type="button" role="option" data-id="${o.id}" aria-selected="${o.id === current}">${esc(o.label)}</button></li>`
-        )
-        .join("");
-    }
-
-    function toggle(kind, trigger) {
-      if (openKind === kind) {
-        closeCurrent();
-        return;
-      }
-      fillMenu(kind);
-      openMenu(pill, trigger, () => (openKind = null));
-      openKind = kind;
-    }
-
-    catTrigger.addEventListener("click", () => toggle("category", catTrigger));
-    audTrigger.addEventListener("click", () => toggle("audience", audTrigger));
-
-    menuList.addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-id]");
-      if (!btn) return;
-      if (openKind === "category") {
-        state.category = btn.dataset.id;
-        renderGrid(true);
-      } else {
-        state.audience = btn.dataset.id;
-      }
-      renderSentence();
-      closeCurrent();
-    });
-
-    document.querySelectorAll(".mode-toggle button").forEach((b) =>
-      b.addEventListener("click", () => {
-        if (b.dataset.mode === state.mode) return;
-        state.mode = b.dataset.mode;
-        state.category = "all";
-        history.replaceState(null, "", "#" + state.mode);
-        if (closeCurrent) closeCurrent();
-        renderSentence();
-        renderGrid(true);
+    // Rolagem suave para os links internos (#contact, #top)
+    document.querySelectorAll('a[href^="#"]').forEach((a) =>
+      a.addEventListener("click", (e) => {
+        const id = a.getAttribute("href").slice(1);
+        const target = id && document.getElementById(id);
+        if (!target) return;
+        e.preventDefault();
+        target.scrollIntoView({ behavior: "smooth" });
+        history.replaceState(null, "", id === "top" ? location.pathname : "#" + id);
       })
     );
-
-    renderSentence();
-    renderGrid(false);
   }
 
   // ---------- PÁGINA DE PROJETO ----------
@@ -185,7 +103,7 @@
     const p = PROJECTS.find((x) => x.id === id) || PROJECTS[0];
 
     document.title = `${p.name} — Danilo Henriques`;
-    $(".btn-back").href = `index.html#${p.mode}`;
+    $(".btn-back").href = "index.html";
     $(".project-top .btn-contact").href = LINKS.contact;
 
     // Seletor de projeto (pílula do meio)
