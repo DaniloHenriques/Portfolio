@@ -10,8 +10,10 @@
   function coverMarkup(p, cls) {
     const c = p.cover;
     if (c.image) {
-      return `<div class="${cls}" style="background:${c.bg || "#f7f7f7"}"><img class="cover-image" src="${IMG + c.image}" alt="" loading="lazy"></div>`;
+      // se a imagem ainda não existir, fica só o fundo
+      return `<div class="${cls}" style="background:${c.bg || "#f5f5f5"}"><img class="cover-image" src="${IMG + c.image}" alt="" loading="lazy" onerror="this.remove()"></div>`;
     }
+    if (!c.logo) return `<div class="${cls}" style="background:${c.bg || "#f5f5f5"}"></div>`;
     return `<div class="${cls}" style="background:${c.bg}"><img class="logo" src="${IMG + c.logo}" width="${c.w}" height="${c.h}" alt=""></div>`;
   }
 

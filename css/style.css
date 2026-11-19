@@ -285,6 +285,14 @@ img { display: block; }
   color: var(--muted);
 }
 .talk-smile { grid-column: 2; align-self: center; margin-top: 17%; width: clamp(96px, 17vh, 160px); height: auto; aspect-ratio: 1; }
+/* Carinha pisca ao passar o mouse */
+.talk-smile .eye { transform-box: fill-box; transform-origin: center; }
+.talk-smile:hover .eye { animation: blink 0.45s var(--ease); }
+@keyframes blink {
+  0%, 100% { transform: scaleY(1); }
+  40%, 55% { transform: scaleY(0.1); }
+}
+
 .talk-photo {
   grid-column: 4;
   height: 100%;
