@@ -189,9 +189,8 @@ img { display: block; }
   object-fit: cover;
 }
 
-/* Case bloqueado: sem clique, não encolhe; mostra cadeado no hover */
+/* Case bloqueado: sem clique; no hover encolhe como os outros e mostra o cadeado no meio */
 .card.is-locked { cursor: default; }
-.card.is-locked:hover .card-cover { clip-path: inset(0 round var(--radius-card)); }
 .lock-badge {
   position: absolute;
   left: 50%;
