@@ -60,21 +60,50 @@
         ${chip(y)}
         <div class="grid">
           ${PROJECTS.filter((p) => p.year === y)
-            .map(
-              (p) => `
-            <a class="card" href="project.html?p=${encodeURIComponent(p.id)}">
-              ${coverMarkup(p, "card-cover")}
+            .map((p) => {
+              const info = `
               <span class="card-info">
                 <span class="card-title">${esc(p.name)}</span>
                 <span class="card-type">${esc(p.type || p.tags[0] || "")}</span>
-              </span>
-            </a>`
-            )
+              </span>`;
+              if (p.open) {
+                return `
+            <a class="card" href="project.html?p=${encodeURIComponent(p.id)}">
+              ${coverMarkup(p, "card-cover")}${info}
+            </a>`;
+              }
+              // Case bloqueado: sem clique, cadeado no hover e "Soon" seguindo o mouse
+              return `
+            <div class="card is-locked" aria-disabled="true">
+              ${coverMarkup(p, "card-cover").replace(
+                /<\/div>$/,
+                `<span class="lock-badge"><img src="${IMG}icon-lock.svg" width="16" height="16" alt=""></span></div>`
+              )}${info}
+            </div>`;
+            })
             .join("")}
         </div>
       </section>`
       )
       .join("");
+
+    // Etiqueta "Soon" que segue o mouse sobre os cases bloqueados
+    const soon = document.createElement("span");
+    soon.className = "chip glass soon-cursor";
+    soon.setAttribute("aria-hidden", "true");
+    soon.textContent = "Soon";
+    document.body.appendChild(soon);
+    const moveSoon = (e) => {
+      soon.style.transform = `translate(${e.clientX + 16}px, ${e.clientY + 16}px)`;
+    };
+    document.querySelectorAll(".card.is-locked").forEach((card) => {
+      card.addEventListener("mouseenter", (e) => {
+        moveSoon(e);
+        soon.classList.add("is-visible");
+      });
+      card.addEventListener("mousemove", moveSoon);
+      card.addEventListener("mouseleave", () => soon.classList.remove("is-visible"));
+    });
 
     // Seção final "Let's talk."
     $("#talk-title").textContent = CONTACT.title;
@@ -157,13 +186,14 @@
           g.items
             .map((x) => {
               const kinds = x.categories.map((c) => CATEGORY_LABELS[c] || c);
-              return `<li><a href="project.html?p=${encodeURIComponent(x.id)}"${x.id === p.id ? ' aria-current="page"' : ""}>
+              const inner = `
                 ${coverMarkup(x, "avatar")}
                 <span class="item-text">
                   <span class="item-name">${esc(x.name)}</span>
-                  ${metaMarkup([g.label, ...kinds])}
-                </span>
-              </a></li>`;
+                  ${metaMarkup(x.open ? [g.label, ...kinds] : [g.label, "Soon"])}
+                </span>`;
+              if (!x.open && x.id !== p.id) return `<li><span class="is-locked" aria-disabled="true">${inner}</span></li>`;
+              return `<li><a href="project.html?p=${encodeURIComponent(x.id)}"${x.id === p.id ? ' aria-current="page"' : ""}>${inner}</a></li>`;
             })
             .join("")
       )

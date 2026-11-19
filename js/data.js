@@ -10,6 +10,7 @@
 // gallery:    imagens da página do projeto (deixe [] para mostrar os blocos cinza)
 // year:       ano em que o projeto aparece na home (sem year, o projeto não aparece na home)
 // type:       texto embaixo do nome no card da home
+// open:       true = case aberto (clicável). Sem open, o card fica bloqueado com cadeado e "Soon"
 
 const LOREM =
   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966";
@@ -88,6 +89,7 @@ window.PORTFOLIO = {
     },
     {
       id: "youse",
+      open: true,
       year: 2026,
       name: "Youse",
       type: "Design System & Website & App",
