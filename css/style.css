@@ -286,12 +286,12 @@ img { display: block; }
 }
 .talk-smile { grid-column: 2; align-self: center; margin-top: 17%; width: clamp(96px, 17vh, 160px); height: auto; aspect-ratio: 1; }
 /* Carinha pisca ao passar o mouse */
-.talk-smile .eye { transform-box: fill-box; transform-origin: center; }
-.talk-smile:hover .eye { animation: blink 0.45s var(--ease); }
-@keyframes blink {
-  0%, 100% { transform: scaleY(1); }
-  40%, 55% { transform: scaleY(0.1); }
-}
+/* Sem transform (evita o SVG ser redesenhado menor no Safari): troca olho aberto ↔ fechado */
+.talk-smile .eye-closed { opacity: 0; }
+.talk-smile:hover .eye { animation: blink-open 0.4s steps(1, end); }
+.talk-smile:hover .eye-closed { animation: blink-closed 0.4s steps(1, end); }
+@keyframes blink-open { 0% { opacity: 1; } 30% { opacity: 0; } 70%, 100% { opacity: 1; } }
+@keyframes blink-closed { 0% { opacity: 0; } 30% { opacity: 1; } 70%, 100% { opacity: 0; } }
 
 .talk-photo {
   grid-column: 4;
